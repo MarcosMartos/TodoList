@@ -8,7 +8,7 @@ namespace TodoList.Controllers
     [ApiController]
     public class TareasController : ControllerBase
     {
-
+        // Solicitud GET
         [HttpGet]
         public ActionResult<IEnumerable<TareaResponseDto>> TodasLasTareas()
         {
@@ -19,9 +19,21 @@ namespace TodoList.Controllers
             };
 
             return Ok(tareaEjemplo);
-           
+
         }
-        
+
+        // Solicitud GET por ID
+        [HttpGet("{Id}")]
+        public ActionResult<TareaResponseDto> TareaPorId(int Id)
+        {
+            if (Id == 1)
+            {
+                var tareaEjemplo = new TareaResponseDto { Id = 1, Titulo = "Tarea Dinámica", Descripcion = $"Obtenida por ID: {Id}", EstaCompleta = false };
+                return Ok(tareaEjemplo);
+            }
+
+            return NotFound();
+        }
 
         // Solicitud POST
         [HttpPost]
