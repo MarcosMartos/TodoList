@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoList.DTOs;
+using TodoList.Services;
 
 namespace TodoList.Controllers
 {
@@ -8,49 +9,43 @@ namespace TodoList.Controllers
     [ApiController]
     public class TareasController : ControllerBase
     {
+        private readonly ITareaService _tareasService;
+
+        public TareasController(ITareaService tareasService)
+        {
+            _tareasService = tareasService;
+        }
+
+
         // Solicitud GET
         [HttpGet]
-        public ActionResult<IEnumerable<TareaResponseDto>> TodasLasTareas()
+        public async Task<ActionResult<IEnumerable<TareaResponseDto>>> ObtenerTodasLasTareasAsync()
         {
-            var tareaEjemplo = new List<TareaResponseDto>()
-            {
-                new TareaResponseDto {Id = 1, Titulo = "Titulo 1", Descripcion = "descripcion 1", EstaCompleta = false},
-                new TareaResponseDto { Id = 2, Titulo = "Titulo 2", Descripcion = "descripcion 2", EstaCompleta=false},
-            };
-
-            return Ok(tareaEjemplo);
-
+            var tarea = await _tareasService.ObtenerTodasLasTareasAsync();
+            return Ok(tarea);
         }
 
         // Solicitud GET por ID
         [HttpGet("{Id}")]
-        public ActionResult<TareaResponseDto> TareaPorId(int Id)
+        public async Task<ActionResult<TareaResponseDto>> ObtenerTareaPorIdAsync(int Id)
         {
-            if (Id == 1)
-            {
-                var tareaEjemplo = new TareaResponseDto { Id = 1, Titulo = "Tarea Dinámica", Descripcion = $"Obtenida por ID: {Id}", EstaCompleta = false };
-                return Ok(tareaEjemplo);
-            }
+            var tarea = await _tareasService.ObtenerTareaPorIdAsync(Id);
 
-            return NotFound();
+            if (tarea == null)
+            {
+                return NotFound($"No se encontró la tarea con ID: {Id}");
+            }
+            return Ok(tarea);
         }
 
         // Solicitud POST
         [HttpPost]
-        public ActionResult<TareaResponseDto> CrearTarea([FromBody] CrearTareaRequestDto tareaDto)
+        public async Task<ActionResult<TareaResponseDto>> CrearTareaAsync([FromBody] CrearTareaRequestDto tareaDto)
         {
-            Console.WriteLine($"Título: {tareaDto.Titulo}");
-            Console.WriteLine($"Descripción: {tareaDto.Descripcion}");
+            // Llamamos al método asíncrono del servicio
+            var respuesta = await _tareasService.CrearTareaAsync(tareaDto);
 
-
-            var respuesta = new TareaResponseDto()
-            {
-                Id = new Random().Next(100, 1000),
-                Titulo = tareaDto.Titulo,
-                Descripcion = tareaDto.Descripcion,
-                EstaCompleta = false,
-            };
-
+            // Devolver 201 Created (HTTP status code)
             return StatusCode(StatusCodes.Status201Created, respuesta);
         }
      
