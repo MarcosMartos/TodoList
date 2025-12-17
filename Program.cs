@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using TodoList.Models;
 using TodoList.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,13 @@ builder.Services.AddControllers();
 
 // Inyección de dependencias
 builder.Services.AddScoped<ITareaService, TareasServicesInMemory>();
+
+// Entity Framework
+// Inyección de contexto de base de datos
+builder.Services.AddDbContext<TareasContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TareasConnection"));
+});
 
 builder.Services.AddOpenApi();
 // Añadir el servicio Swagger
