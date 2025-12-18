@@ -10,7 +10,8 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 // Inyección de dependencias
-builder.Services.AddScoped<ITareaService, TareasServicesInMemory>();
+//builder.Services.AddScoped<ITareaService, TareasServicesInMemory>();
+builder.Services.AddScoped<ITareaService, TareasEFService>();
 
 // Entity Framework
 // Inyección de contexto de base de datos

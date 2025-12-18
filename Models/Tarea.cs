@@ -7,9 +7,9 @@ namespace TodoList.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TareaId { get; set; }
-        public string? TareaTitulo { get; set; }
-        public string? TareaDescripcion { get; set; }
+        public int Id { get; set; }
+        public string? Titulo { get; set; }
+        public string? Descripcion { get; set; }
         public bool EstaCompleta { get; set; }
 
     }
