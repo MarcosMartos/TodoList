@@ -1,5 +1,6 @@
 ﻿using TodoList.DTOs;
 using TodoList.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TodoList.Services
 {
@@ -14,7 +15,7 @@ namespace TodoList.Services
 
 
         // Metodo Get
-        public async Task<IEnumerable<TareaResponseDto>> GetAll()
+        public async Task<IEnumerable<TareaResponseDto>> ObtenerTodasLasTareasAsync()
         {
             // 1. Obtenemos las ENTIDADES de la base de datos
             var tareasEntidades = await _context.Tareas.ToListAsync();
@@ -30,7 +31,7 @@ namespace TodoList.Services
         }
 
         // Metodo Get By ID
-        public async Task<TareaResponseDto> GetById(int id)
+        public async Task<TareaResponseDto?> ObtenerTareaPorIdAsync(int id)
         {
             var tareaEntidad = await _context.Tareas.FindAsync(id);
 
@@ -49,7 +50,7 @@ namespace TodoList.Services
         }
 
         // Metodo Post
-        public async Task<TareaResponseDto> PostTarea(CrearTareaRequestDto tareaDTO)
+        public async Task<TareaResponseDto> CrearTareaAsync(CrearTareaRequestDto tareaDTO)
         {
             // 1. Convertimos el DTO a una ENTIDAD de base de datos
             var entidad = new Tarea // Asumiendo que tu modelo de BD se llama TareaEntity
@@ -77,4 +78,4 @@ namespace TodoList.Services
     }
 
 }
-}
+

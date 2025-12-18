@@ -7,6 +7,6 @@ namespace TodoList.Models
 
         public TareasContext(DbContextOptions<TareasContext> options) : base(options) {}
 
-        DbSet<Tarea> Tareas { get; set; }
+        public DbSet<Tarea> Tareas { get; set; }
     }
 }
