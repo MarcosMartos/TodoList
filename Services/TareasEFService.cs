@@ -14,7 +14,7 @@ namespace TodoList.Services
         }
 
 
-        // Metodo Get
+        // Metodo para leer (Read) 
         public async Task<IEnumerable<TareaResponseDto>> ObtenerTodasLasTareasAsync()
         {
             // 1. Obtenemos las ENTIDADES de la base de datos
@@ -30,7 +30,7 @@ namespace TodoList.Services
             });
         }
 
-        // Metodo Get By ID
+        // Metodo para Leer por Id (Read)
         public async Task<TareaResponseDto?> ObtenerTareaPorIdAsync(int id)
         {
             var tareaEntidad = await _context.Tareas.FindAsync(id);
@@ -49,7 +49,7 @@ namespace TodoList.Services
             };
         }
 
-        // Metodo Post
+        // Metodo para Crear (Create)
         public async Task<TareaResponseDto> CrearTareaAsync(CrearTareaRequestDto tareaDTO)
         {
             // 1. Convertimos el DTO a una ENTIDAD de base de datos
@@ -74,6 +74,41 @@ namespace TodoList.Services
                 Descripcion = entidad.Descripcion,
                 EstaCompleta = entidad.EstaCompleta
             };
+        }
+        // Método para Actualizar (Update)
+        public async Task<TareaResponseDto?> ActualizarTareaAsync(int Id, ActualizarTareaRequestDto tareaDto)
+        {
+            var tareaExistente = await _context.Tareas.FindAsync(Id);
+
+            if (tareaExistente == null) return null;
+
+            tareaExistente.Titulo = tareaDto.Titulo;
+            tareaExistente.Descripcion = tareaDto.Descripcion;
+            tareaExistente.EstaCompleta = tareaDto.EstaCompleta;
+
+            await _context.SaveChangesAsync();
+
+            return new TareaResponseDto
+            {
+                Id = tareaExistente.Id,
+                Titulo = tareaExistente.Titulo,
+                Descripcion = tareaExistente.Descripcion,
+                EstaCompleta = tareaExistente.EstaCompleta
+            };
+        }
+
+        // Método para Eliminar (Delete)
+        public async Task<bool> EliminarTareaAsync(int Id)
+        {
+            var tarea = await _context.Tareas.FindAsync(Id);
+
+            if (tarea == null) return false;
+
+            _context.Tareas.Remove(tarea);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 
